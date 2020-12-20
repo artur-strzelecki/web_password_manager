@@ -6,6 +6,8 @@ from django.http import HttpResponse
 import string
 import random
 from .password_enc import encrypt_password
+from .models import Account
+
 
 # user login and registrtion and logout
 def login_view(request):
@@ -127,4 +129,19 @@ def take_slide_range_view(request):
 # end add new account
 
 def accounts_view(request):
-    pass
+    if request.user.is_authenticated:
+        list_acc = Account.objects.filter(user=request.user)
+        if request.method == 'POST':
+            search = request.POST.get('search')
+            list_search = []
+            if search is not None and search != '':
+                for acc in list_acc:
+                    if search in acc.login or search in acc.website:
+                        list_search.append(acc)
+
+                return render(request, 'list_accounts.html', {'list_account': list_search, 'search': search,
+                                                              'count_acc': len(list_search)})
+
+        return render(request, 'list_accounts.html', {'list_account': list_acc, 'count_acc': len(list_acc)})
+    else:
+        return redirect('login')

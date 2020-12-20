@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %} Accounts {% endblock %}
+{% block content %}
+    <div class="mx-auto" id="test6" style="width: 600px;">
+        <h2><p class="text-center">List account</p></h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input type="text" class="form-control" id="search_input" name="search" id="formGroupExampleInput" placeholder="Search..." value={{search}}>
+            </div>
+        </form>
+        <p class="font-weight-light" id="count">Accounts: {{count_acc}}</p>
+        <div class="list-group">
+            {% for acc in list_account %}
+                <a href="{% url 'edit_account' id=acc.id %}" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 id="test3" class="mb-1">{{acc.website}}</h5>
+                    </div>
+                    <small id="test4">{{acc.login}}</small>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+
+
