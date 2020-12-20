@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from .forms import RegisterForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
-from .forms import RegisterForm
+from django.http import HttpResponse
 
 
 def login_view(request):
@@ -59,6 +60,31 @@ def register_view(request):
 
     return render(request, 'register.html', {'exec_modal_error': exec_modal_error,
                                              'exec_modal_success': exec_modal_success})
+
+
+def check_register_view(request):
+    # type 1 username
+    # type 2 email
+    # type 3 password
+    if request.method == 'POST':
+        message = ''
+        type = request.POST['type']
+        if type == '1':
+            username = request.POST['username']
+            if User.objects.filter(username=username).exists():
+                message = 'Username ' + username + ' already exists!'
+        if type == '2':
+            email = request.POST['email']
+            if User.objects.filter(email=email).exists():
+                message = 'Email ' + email + ' already exists!'
+        if type == '3':
+            password1 = request.POST['password1']
+            password_conf = request.POST['password2']
+            if password_conf != password1:
+                message = 'Password diffrent!'
+        return HttpResponse(message)
+    else:
+        return HttpResponse('')
 
 
 def accounts_view(request):

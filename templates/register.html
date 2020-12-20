@@ -75,3 +75,75 @@
     </div>
 
 {% endblock %}
+
+{% block script %}
+    var user = document.getElementById("username");
+    var emai = document.getElementById("email");
+    var pass = document.getElementById("password2");
+    var ex_modal_err = {{exec_modal_error}};
+    var ex_modal_succe = {{exec_modal_success}};
+
+    if (ex_modal_err === 1)
+    {
+       document.getElementById("buttonmodalerror").click();
+    }
+
+    if (ex_modal_succe === 1)
+    {
+       document.getElementById("buttonmodalsuccess").click();
+    }
+    user.oninput = function() {
+        $.ajax(
+        {
+            method: "POST",
+            url: "{% url 'check_reg' %}",
+            data:
+            {
+                type: "1",
+                username: this.value,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: function(message)
+            {
+                document.getElementById("check_username").innerHTML = message
+            }
+         })
+    };
+
+    emai.oninput = function() {
+        $.ajax(
+        {
+            method: "POST",
+            url: "{% url 'check_reg' %}",
+            data:
+            {
+                type: "2",
+                email: this.value,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: function(message)
+            {
+                document.getElementById("check_email").innerHTML = message
+            }
+         })
+    };
+
+    pass.oninput = function() {
+        $.ajax(
+        {
+            method: "POST",
+            url: "{% url 'check_reg' %}",
+            data:
+            {
+                type: "3",
+                password1: document.getElementById("password1").value,
+                password2: this.value,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: function(message)
+            {
+                document.getElementById("check_password").innerHTML = message
+            }
+         })
+    };
+{% endblock %}
