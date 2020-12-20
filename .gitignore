@@ -1,0 +1,8 @@
+/secret.py
+/db.sqlite3
+.idea/
+__pycache__/
+venv/
+password_manager/__pycache__/
+password_manager_app/__pycache__/
+password_manager_app/migrations/
