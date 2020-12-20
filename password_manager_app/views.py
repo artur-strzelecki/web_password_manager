@@ -7,6 +7,13 @@ from .models import Account
 import string
 import random
 from .password_enc import encrypt_password, decrypt_password
+from django.core.mail import EmailMessage
+from password_manager.settings import EMAIL_HOST_USER
+from django.urls import reverse
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.sites.shortcuts import get_current_site
+from .tokens import activate_token
+from django.utils.encoding import force_bytes, force_text
 
 
 # user login and registrtion and logout
@@ -60,6 +67,23 @@ def register_view(request):
         if save == 1:
             user = User.objects.create_user(username=username, email=email, password=password1)
             exec_modal_success = 1
+            # send email
+            if user is not None:
+                user.is_active = False
+                user.save()
+
+                link = reverse('activate', kwargs={'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
+                                                   'token': activate_token.make_token(user)})
+
+                link_to_email = 'http://' + get_current_site(request).domain + link
+                email = EmailMessage(
+                    'Activate your account',
+                    'Hello ' + user.username + '!' + '\n' + 'Please click this link to activate your account ' +
+                    link_to_email,
+                    EMAIL_HOST_USER,
+                    [user.email]
+                )
+                email.send(fail_silently=False)
         else:
             exec_modal_error = 1
 
@@ -180,3 +204,26 @@ def edit_account_view(request, id):
         return redirect('login')
 
 # end account view
+
+
+# activate account
+def activate_view(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and activate_token.check_token(user, token):
+        if user.is_active is False:
+            user.is_active = True
+            user.save()
+            message = 'Thank you for your email confirmation. Now you can login your account.'
+        else:
+            message = 'Your account is already active'
+    else:
+        message = 'Activation link is invalid!'
+
+    return render(request, 'activate.html', {'message': message})
+
+# end activate account
