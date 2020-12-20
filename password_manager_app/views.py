@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 import string
 import random
-
+from .password_enc import encrypt_password
 
 # user login and registrtion and logout
 def login_view(request):
@@ -97,7 +97,7 @@ def logout_success_view(request):
 
 
 # start add new account
-def add_new_account(request):
+def add_new_account_view(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             form = AddNewAccount(request.POST)
@@ -114,7 +114,7 @@ def add_new_account(request):
         return redirect('login')
 
 
-def take_slide_range(request):
+def take_slide_range_view(request):
     if request.method == 'POST':
         slider_range = request.POST['slider_range']
         chars = string.ascii_letters + string.digits + string.punctuation

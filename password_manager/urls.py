@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from password_manager_app.views import login_view, register_view, accounts_view, check_register_view, \
-    logout_success_view
+    logout_success_view, add_new_account_view, take_slide_range_view
 from django.conf import settings
 
 urlpatterns = [
