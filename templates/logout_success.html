@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %} Logout {% endblock %}
+{% block content %}
+
+<div class="ml-3">
+      <h5> Logout success. </h5>
+      You will be redirected <a id="test"></a>
+     sec...
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+
+setTimeout(function() {
+     window.location.href = "{% url 'login' %}";
+}, 3000);
+
+var time = Math.floor(Date.now() / 1000 + 4);
+
+var x = setInterval(function() {
+    var t = time - Math.floor(Date.now() / 1000);
+    document.getElementById("test").innerHTML = t
+}, 1000)
+{% endblock %}

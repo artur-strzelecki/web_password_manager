@@ -87,5 +87,9 @@ def check_register_view(request):
         return HttpResponse('')
 
 
+def logout_success_view(request):
+    return render(request, 'logout_success.html')
+
+
 def accounts_view(request):
     pass
