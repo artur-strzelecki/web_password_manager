@@ -3,10 +3,10 @@ from .forms import RegisterForm, AddNewAccount
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
+from .models import Account
 import string
 import random
-from .password_enc import encrypt_password
-from .models import Account
+from .password_enc import encrypt_password, decrypt_password
 
 
 # user login and registrtion and logout
@@ -128,6 +128,7 @@ def take_slide_range_view(request):
 
 # end add new account
 
+# start account view
 def accounts_view(request):
     if request.user.is_authenticated:
         list_acc = Account.objects.filter(user=request.user)
@@ -145,3 +146,37 @@ def accounts_view(request):
         return render(request, 'list_accounts.html', {'list_account': list_acc, 'count_acc': len(list_acc)})
     else:
         return redirect('login')
+
+
+def edit_account_view(request, id):
+    if request.user.is_authenticated:
+        edit = 0
+        account = get_object_or_404(Account, pk=id, user=request.user)
+        account.password = decrypt_password(request, account.password)
+        website_url = account.website
+        if 'https://' not in website_url:
+            website_url = 'https://' + website_url
+        if request.method == 'POST':
+            if request.POST.get('submit') is not None:
+                form = AddNewAccount(request.POST, instance=account)
+                if form.is_valid():
+                    passw = form.data['password_noenc']
+                    pass_enc = encrypt_password(request, passw)
+                    new_form = form.save(commit=False)
+                    new_form.password = pass_enc
+                    new_form.save()
+                    # take info about account again
+                    account = get_object_or_404(Account, pk=id, user=request.user)
+                    account.password = passw
+                    edit = 0
+            elif request.POST.get('edit') is not None:
+                edit = 1
+            elif request.POST.get('delete') is not None:
+                account.delete()
+                return redirect('accounts')
+
+        return render(request, 'account_edit.html', {'account': account, 'edit': edit, 'website_url': website_url})
+    else:
+        return redirect('login')
+
+# end account view

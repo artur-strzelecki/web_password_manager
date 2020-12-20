@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %} Edit account {% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="mx-auto" style="width: 700px;">
+            <h2><p class="text-center">Edit account</p></h2>
+            {% if edit == 0 %}
+                <div class="form-group">
+                    <label>Login/email</label>
+                    <input type="username" readonly class="form-control" aria-describedby="emailHelp" name="login" value={{account.login}}>
+                </div>
+                <div class="form-group">
+                    <label>Website</label>
+                    <a href="{{website_url}}" target="_blank"><input type="website" readonly class="form-control" name="website" value={{account.website}}></a>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input class="form-control" readonly name="password_noenc" id="password" value={{account.password}}>
+                </div>
+                <button type="edit" name="edit" class="btn btn-primary">Edit</button>
+            </div>
+        {% endif %}
+
+        {% if edit == 1 %}
+            <div class="form-group">
+                <label>Login/email</label>
+                <input type="username" class="form-control" aria-describedby="emailHelp" name="login" value={{account.login}}>
+            </div>
+            <div class="form-group">
+                <label>Website</label>
+                <input type="website" class="form-control" name="website" value="{{account.website}}">
+            </div>
+            <label for="customRange2" class="form-label">Generate password  </label>
+            <input type="range" class="form-range" min="8" max="32" id="range" name="range" value={{account.range}}>
+            <div class="form-group">
+                <label>Password</label>
+                <input class="form-control" name="password_noenc" id="password" value={{account.password}}>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_save">Save changes</button>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal_delete">Delete account</button>
+            </div>
+        </div>
+
+        {% endif %}
+
+        <div class="modal fade" id="modal_save" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal_saveLabel">Save</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" name="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal_delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal_deleteLabel">Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="delete" name="delete" class="btn btn-danger">Delete account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+{% endblock %}
+
+{% block script %}
+    var slider = document.getElementById("range");
+
+    slider.oninput = function() {
+        $.ajax(
+        {
+            method: "POST",
+            url: "{% url 'take_slider' %}",
+            data:
+            {
+                slider_range: this.value,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: function(gen_pass)
+            {
+                document.getElementById('password').value = gen_pass
+            }
+         })
+    };
+{% endblock %}
+

@@ -15,5 +15,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     path('add/', add_new_account_view, name='add_new_account'),
     path('slider_range/', take_slide_range_view, name='take_slider'),
+    path('accounts/<int:id>/', edit_account_view, name='edit_account'),
 
 ]
