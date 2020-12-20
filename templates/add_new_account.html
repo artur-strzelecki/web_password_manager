@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %} Add new account {% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="mx-auto" style="width: 700px;">
+            <h2><p class="text-center">Add account</p></h2>
+            <div class="form-group">
+                <label>Login/email</label>
+                <input type="username" class="form-control" aria-describedby="emailHelp" name="login">
+            </div>
+            <div class="form-group">
+                <label>Website</label>
+                <input type="website" class="form-control" name="website">
+            </div>
+            <label for="customRange2" class="form-label">Generate password  </label>
+            <input type="range" class="form-range" min="8" max="32" id="range" name="range">
+            <div class="form-group">
+                <label>Password</label>
+                <input class="form-control" name="password_noenc" id="password">
+            </div>
+            <div id="test1"></div>
+            <button type="submit" class="btn btn-primary">Add account</button>
+        </div>
+    </form>
+{% endblock %}
+{% block script %}
+    var slider = document.getElementById("range");
+
+    slider.oninput = function() {
+        $.ajax(
+        {
+            method: "POST",
+            url: "{% url 'take_slider' %}",
+            data:
+            {
+                slider_range: this.value,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: function(gen_pass)
+            {
+                document.getElementById('password').value = gen_pass
+            }
+         })
+    };
+{% endblock %}

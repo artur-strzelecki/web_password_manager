@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegisterForm
+from .forms import RegisterForm, AddNewAccount
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
+import string
+import random
 
 
+# user login and registrtion and logout
 def login_view(request):
     if not request.user.is_authenticated:
         message = ''
@@ -90,6 +93,38 @@ def check_register_view(request):
 def logout_success_view(request):
     return render(request, 'logout_success.html')
 
+# end login and registrtion and logout
+
+
+# start add new account
+def add_new_account(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = AddNewAccount(request.POST)
+            if form.is_valid():
+                passw = form.data['password_noenc']
+                pass_enc = encrypt_password(request, passw)
+                new_form = form.save(commit=False)
+                new_form.user = request.user
+                new_form.password = pass_enc
+                new_form.save()
+
+        return render(request, 'add_new_account.html')
+    else:
+        return redirect('login')
+
+
+def take_slide_range(request):
+    if request.method == 'POST':
+        slider_range = request.POST['slider_range']
+        chars = string.ascii_letters + string.digits + string.punctuation
+        password = ''.join(random.choice(chars) for i in range(int(slider_range)))  # generate random password
+        return HttpResponse(password)
+    else:
+        return HttpResponse('')
+
+
+# end add new account
 
 def accounts_view(request):
     pass

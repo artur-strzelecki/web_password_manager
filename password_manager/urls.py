@@ -13,4 +13,7 @@ urlpatterns = [
     path('check_register/', check_register_view, name='check_register'),
     path('logout_success/', logout_success_view, name='logout_success'),
     path('logout/', LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    path('add/', add_new_account_view, name='add_new_account'),
+    path('slider_range/', take_slide_range_view, name='take_slider'),
+
 ]
