@@ -14,19 +14,18 @@
                 <label>Website</label>
                 <input type="website" class="form-control" name="website">
             </div>
-            <label for="customRange2" class="form-label">Generate password  </label>
-            <input type="range" class="form-range" min="8" max="32" id="range" name="range">
+            <input type="range" class="form-range" min="0" max="32" id="range" name="range"><br>
+            <label>Length: <a id="length_pass"></a> </label>
             <div class="form-group">
                 <label>Password</label>
-                <input class="form-control" name="password_noenc" id="password">
+                <input class="form-control" name="password_noenc" id="password" maxlength="32">
             </div>
-            <div id="test1"></div>
             <button type="submit" class="btn btn-primary">Add account</button>
         </div>
     </form>
 {% endblock %}
 {% block script %}
-    var slider = document.getElementById("range");
+    var slider = document.getElementById('range');
 
     slider.oninput = function() {
         $.ajax(
@@ -40,8 +39,17 @@
             },
             success: function(gen_pass)
             {
-                document.getElementById('password').value = gen_pass
+                document.getElementById('password').value = gen_pass;
+                document.getElementById('length_pass').innerHTML = gen_pass.length;
             }
          })
     };
+
+    var password_change = document.getElementById("password");
+
+    password_change.addEventListener('keyup', (e) => {
+        document.getElementById('range').value = password_change.value.length;
+        document.getElementById('length_pass').innerHTML = password_change.value.length;
+    });
+
 {% endblock %}
