@@ -22,6 +22,9 @@
             <button type="submit" class="btn btn-primary">Sign in</button>
         </form>
         <br>
-        <p><a href="{% url 'register' %}">Don't have account? </a> </p>
+        <div class="d-flex">
+            <div class="mr-auto p-0"><p><a href="{% url 'register' %}">Don't have account? </a> </p></div>
+            <div class="p-0"><p><a href="{% url 'register' %}"> Forgot password? </a> </p></div>
+        </div>
     </div>
 {% endblock %}

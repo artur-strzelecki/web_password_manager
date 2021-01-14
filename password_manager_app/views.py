@@ -35,6 +35,8 @@ def login_view(request):
                 if user is not None:
                     if user.is_active is False:
                         message = 'Please check your email and activate your account'
+                    else:
+                        message = 'Incorrect password or username'
                 else:
                     message = 'Incorrect password or username'
 
@@ -219,11 +221,16 @@ def activate_view(request, uidb64, token):
             user.is_active = True
             user.save()
             message = 'Thank you for your email confirmation. Now you can login your account.'
-        else:
-            message = 'Your account is already active'
     else:
         message = 'Activation link is invalid!'
 
     return render(request, 'activate.html', {'message': message})
 
 # end activate account
+
+
+# profile user
+def profile_user_view(request):
+
+    return render(request, 'profile.html')
+# end profile user

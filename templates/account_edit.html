@@ -8,16 +8,34 @@
             <h2><p class="text-center">Edit account</p></h2>
             {% if edit == 0 %}
                 <div class="form-group">
-                    <label>Login/email</label>
-                    <input type="username" readonly class="form-control" aria-describedby="emailHelp" name="login" value={{account.login}}>
+                    <label>Website</label>
+                    <div class="form-row">
+                        <div class="col-10">
+                            <a href="{{website_url}}" target="_blank"><input type="website" readonly class="form-control" name="website" value={{account.website}}></a>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>Website</label>
-                    <a href="{{website_url}}" target="_blank"><input type="website" readonly class="form-control" name="website" value={{account.website}}></a>
+                    <label>Login/email</label>
+                    <div class="form-row">
+                        <div class="col-10">
+                            <input type="username" readonly class="form-control" aria-describedby="emailHelp" name="login" id="login" value={{account.login}}>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-outline-dark" id="copy_username_bt" onclick="copy_username()">Copy</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input class="form-control" readonly name="password_noenc" id="password" value={{account.password}}>
+                    <div class="form-row">
+                        <div class="col-10">
+                            <input class="form-control" readonly name="password_noenc" id="password" value={{account.password}}>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-outline-dark" id="copy_password_bt" onclick="copy_password()">Copy</button>
+                        </div>
+                    </div>
                 </div>
                 <button type="edit" name="edit" class="btn btn-primary">Edit</button>
             </div>
@@ -32,11 +50,11 @@
                 <label>Website</label>
                 <input type="website" class="form-control" name="website" value="{{account.website}}">
             </div>
-            <label for="customRange2" class="form-label">Generate password  </label>
-            <input type="range" class="form-range" min="8" max="32" id="range" name="range" value={{account.range}}>
+            <input type="range" class="form-range" min="0" max="32" id="range" name="range" value={{account.range}}><br>
+            <label>Length: <a id="length_pass">{{account.range}}</a></label>
             <div class="form-group">
                 <label>Password</label>
-                <input class="form-control" name="password_noenc" id="password" value={{account.password}}>
+                <input class="form-control" name="password_noenc" id="password_noenc" maxlength="32" value={{account.password}}>
             </div>
             <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_save">Save changes</button>
@@ -104,9 +122,34 @@
             },
             success: function(gen_pass)
             {
-                document.getElementById('password').value = gen_pass
+                document.getElementById('password_noenc').value = gen_pass;
+                document.getElementById('length_pass').innerHTML = gen_pass.length;
             }
          })
     };
+
+    function copy_username(){
+        let inputText = document.getElementById("login");
+        inputText.select();
+        document.execCommand("copy");
+        document.getElementById("copy_username_bt").innerHTML = "Copied";
+
+    };
+
+    function copy_password(){
+        let inputText = document.getElementById("password");
+        inputText.select();
+        document.execCommand("copy");
+        document.getElementById("copy_password_bt").innerHTML = "Copied";
+
+    };
+
+    var password_change = document.getElementById("password_noenc");
+
+    password_change.addEventListener('keyup', (e) => {
+        document.getElementById('range').value = password_change.value.length;
+        document.getElementById('length_pass').innerHTML = password_change.value.length;
+    });
+
 {% endblock %}
 

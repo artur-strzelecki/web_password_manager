@@ -20,14 +20,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'accounts' %}">List</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'accounts' %}">Profile</a>
-                </li>
-                {% if request.user.is_authenticated %}
-                <span class="navbar-text">
-                    <div class="ml-4"><span class="text-primary">Hello {{request.user.username}}!</span></div>
-                </span>
-                {% endif %}
             </ul>
             <ul class="navbar-nav ml-auto">
                 {% if not request.user.is_authenticated %}
@@ -39,9 +31,16 @@
                     </li>
                 {% endif %}
                 {% if request.user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Logout </a>
-                    </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        {{request.user.username}}
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </li>
                 {% endif %}
             </ul>
             </div>
