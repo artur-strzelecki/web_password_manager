@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %} New password {% endblock %}
+{% block content %}
+    <div class="ml-3">
+        {% if validlink %}
+            <h4>Enter new password</h4>
+            <p>Forgotten your password? Enter your email address below, and we’ll email instructions for setting a new one.</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-2">
+                            <label>New password: </label>
+                        </div>
+                        <div class="col-3">
+                            {{ form.new_password1.errors }}
+                            <input type="password" class="form-control" name="new_password1" id="new_password1">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row">
+                        <div class="col-2">
+                            <label>Confirm password: </label>
+                        </div>
+                        <div class="col-3">
+                            {{ form.new_password2.errors }}
+                            <input type="password" class="form-control" name="new_password2" id="new_password2">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Change password</button>
+            </form>
+        {% else %}
+            <h4>Password reset unsuccessful</h4>
+            <p>The password reset link was invalid, possibly because it has already been used. Please request a new password reset.</p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth import views as av
 from password_manager_app.views import login_view, register_view, accounts_view, check_register_view, \
     logout_success_view, add_new_account_view, take_slide_range_view, edit_account_view, activate_view, \
     profile_user_view
@@ -13,10 +13,14 @@ urlpatterns = [
     path('accounts/', accounts_view, name='accounts'),
     path('check_register/', check_register_view, name='check_register'),
     path('logout_success/', logout_success_view, name='logout_success'),
-    path('logout/', LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    path('logout/', av.LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     path('add/', add_new_account_view, name='add_new_account'),
     path('slider_range/', take_slide_range_view, name='take_slider'),
     path('accounts/<int:id>/', edit_account_view, name='edit_account'),
     path('activate/<uidb64>/<token>', activate_view, name='activate'),
-    path('profile/', profile_user_view, name='profile')
+    path('profile/', profile_user_view, name='profile'),
+    path('reset_password/', av.PasswordResetView.as_view(template_name='forgot_password/reset_password.html'), name='reset_password'),
+    path('reset_password_done/', av.PasswordResetDoneView.as_view(template_name='forgot_password/reset_password_done.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', av.PasswordResetConfirmView.as_view(template_name='forgot_password/reset_token.html'), name='password_reset_confirm'),
+    path('reset_password_complete/', av.PasswordResetCompleteView.as_view(template_name='forgot_password/reset_password_complete.html'), name='password_reset_complete'),
 ]
