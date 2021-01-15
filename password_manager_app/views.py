@@ -231,6 +231,22 @@ def activate_view(request, uidb64, token):
 
 # profile user
 def profile_user_view(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            change = 0
+            # change first name
+            if request.POST['first_name'] != '':
+                change = 1
+                request.user.first_name = request.POST['first_name']
+            # change last name
+            if request.POST['last_name'] != '':
+                change = 1
+                request.user.last_name = request.POST['last_name']
 
-    return render(request, 'profile.html')
+            if change == 1:
+                request.user.save()
+
+        return render(request, 'profile.html')
+    else:
+        return redirect('login')
 # end profile user

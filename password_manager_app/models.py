@@ -8,4 +8,3 @@ class Account(models.Model):
     website = models.TextField(blank=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     range = models.IntegerField()
-

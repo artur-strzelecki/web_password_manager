@@ -133,7 +133,7 @@
         inputText.select();
         document.execCommand("copy");
         document.getElementById("copy_username_bt").innerHTML = "Copied";
-
+        document.getElementById("copy_username_bt").focus();
     };
 
     function copy_password(){
@@ -141,6 +141,7 @@
         inputText.select();
         document.execCommand("copy");
         document.getElementById("copy_password_bt").innerHTML = "Copied";
+        document.getElementById("copy_password_bt").focus();
 
     };
 
