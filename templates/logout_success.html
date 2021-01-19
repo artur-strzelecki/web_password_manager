@@ -3,9 +3,9 @@
 {% block title %} Logout {% endblock %}
 {% block content %}
 
-<div class="ml-3">
-      <h5> Logout success. </h5>
-      You will be redirected <a id="test"></a>
+<div class="ml-4">
+      <h5> Logout success </h5>
+      You will be redirected <a id="interval"></a>
      sec...
 </div>
 
@@ -22,6 +22,6 @@ var time = Math.floor(Date.now() / 1000 + 4);
 
 var x = setInterval(function() {
     var t = time - Math.floor(Date.now() / 1000);
-    document.getElementById("test").innerHTML = t
+    document.getElementById("interval").innerHTML = t
 }, 1000)
 {% endblock %}

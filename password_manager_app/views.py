@@ -46,8 +46,7 @@ def login_view(request):
 
 
 def register_view(request):
-    exec_modal_error = 0
-    exec_modal_success = 0
+    create_success = None
     if request.method == 'POST':
         save = 1
         form = RegisterForm(request.POST)
@@ -68,7 +67,7 @@ def register_view(request):
 
         if save == 1:
             user = User.objects.create_user(username=username, email=email, password=password1)
-            exec_modal_success = 1
+            create_success = 1
             # send email
             if user is not None:
                 user.is_active = False
@@ -87,16 +86,14 @@ def register_view(request):
                 )
                 email.send(fail_silently=False)
         else:
-            exec_modal_error = 1
+            create_success = 0
 
-    return render(request, 'register.html', {'exec_modal_error': exec_modal_error,
-                                             'exec_modal_success': exec_modal_success})
+    return render(request, 'register.html', {'create_success': create_success})
 
 
 def check_register_view(request):
     # type 1 username
     # type 2 email
-    # type 3 password
     if request.method == 'POST':
         message = ''
         type = request.POST['type']
@@ -108,11 +105,6 @@ def check_register_view(request):
             email = request.POST['email']
             if User.objects.filter(email=email).exists():
                 message = 'Email ' + email + ' already exists!'
-        if type == '3':
-            password1 = request.POST['password1']
-            password_conf = request.POST['password2']
-            if password_conf != password1:
-                message = 'Password diffrent!'
         return HttpResponse(message)
     else:
         return HttpResponse('')

@@ -14,7 +14,7 @@ def encrypt_password(request, password):
         salt=salt_bytes,
         iterations=1000000,
     )
-    key = base64.urlsafe_b64encode(kdf.derive(str.encode(request.user.password + KEY2_PASS)))
+    key = base64.urlsafe_b64encode(kdf.derive(str.encode(KEY2_PASS)))
     f = Fernet(key)
     pass_enc = f.encrypt(str.encode(password))
     return pass_enc
@@ -29,7 +29,7 @@ def decrypt_password(request, pass_enc):
         salt=salt_bytes,
         iterations=1000000,
     )
-    key = base64.urlsafe_b64encode(kdf.derive(str.encode(request.user.password + KEY2_PASS)))
+    key = base64.urlsafe_b64encode(kdf.derive(str.encode(KEY2_PASS)))
     f = Fernet(key)
     password = f.decrypt(pass_enc)
     return password.decode()

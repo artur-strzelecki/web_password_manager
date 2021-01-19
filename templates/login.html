@@ -2,29 +2,22 @@
 
 {% block title %} Sign in {% endblock %}
 {% block content %}
-    <div class="mx-auto" style="width: 700px;">
-        <h2><p class="text-center">Sign in</p></h2>
-        {% if message != '' %}
-            <div class="alert alert-warning" role="alert">
-                {{message}}
-            </div>
-        {% endif %}
-        <form method="post">
+    <div id="container">
+        <form id="form" method="post">
             {% csrf_token %}
-            <div class="form-group">
-                <label>Username</label>
-                <input type="username" class="form-control" aria-describedby="emailHelp" name="username">
+            <h2><p class="text-center">Sign in</p></h2>
+            {% if message != '' %}
+                <div id="div_alert" class="alert alert-info" role="alert">
+                    {{message}}
+                </div>
+            {% endif %}
+            <input type="username" class="form-control" placeholder="Username" aria-describedby="emailHelp" name="username">
+            <input type="password" class="form-control" name="password" placeholder="Password">
+            <button type="submit" class="btn btn-lg btn-secondary btn-block">Log in</button><br>
+            <div class="d-flex">
+                <div class="mr-auto p-0"><p><a id="login_a1" href="{% url 'register' %}">Don't have account? </a> </p></div>
+                <div class="p-0"><p><a id="login_a2" href="{% url 'reset_password' %}"> Forgot password? </a> </p></div>
             </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" class="form-control"  name="password">
-            </div>
-            <button type="submit" class="btn btn-primary">Sign in</button>
         </form>
-        <br>
-        <div class="d-flex">
-            <div class="mr-auto p-0"><p><a href="{% url 'register' %}">Don't have account? </a> </p></div>
-            <div class="p-0"><p><a href="{% url 'reset_password' %}"> Forgot password? </a> </p></div>
-        </div>
     </div>
 {% endblock %}

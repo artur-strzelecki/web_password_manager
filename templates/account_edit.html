@@ -1,67 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %} Edit account {% endblock %}
+{% block title %} Account {% endblock %}
 {% block content %}
-    <form method="post">
+<div id="container">
+    <form id="form" method="post">
         {% csrf_token %}
-        <div class="mx-auto" style="width: 700px;">
-            <h2><p class="text-center">Edit account</p></h2>
             {% if edit == 0 %}
-                <div class="form-group">
-                    <label>Website</label>
-                    <div class="form-row">
-                        <div class="col-10">
-                            <a href="{{website_url}}" target="_blank"><input type="website" readonly class="form-control" name="website" value={{account.website}}></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Login/email</label>
-                    <div class="form-row">
-                        <div class="col-10">
-                            <input type="username" readonly class="form-control" aria-describedby="emailHelp" name="login" id="login" value={{account.login}}>
-                        </div>
-                        <div class="col">
-                            <button type="button" class="btn btn-outline-dark" id="copy_username_bt" onclick="copy_username()">Copy</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="form-row">
-                        <div class="col-10">
-                            <input class="form-control" readonly name="password_noenc" id="password" value={{account.password}}>
-                        </div>
-                        <div class="col">
-                            <button type="button" class="btn btn-outline-dark" id="copy_password_bt" onclick="copy_password()">Copy</button>
-                        </div>
-                    </div>
-                </div>
-                <button type="edit" name="edit" class="btn btn-primary">Edit</button>
-            </div>
+                <h2><p class="text-center">Info account</p></h2>
+                <a href="{{website_url}}" target="_blank"><input type="website" readonly class="form-control" name="website" value={{account.website}}></a>
+                <input type="username" readonly class="form-control" aria-describedby="emailHelp" name="login" id="login" value={{account.login}}>
+                <input type="text" class="form-control" readonly name="password_noenc" id="password" value={{account.password}}>
+                <button type="edit" name="edit" class="btn btn-lg btn-secondary btn-block">Edit</button>
         {% endif %}
 
         {% if edit == 1 %}
-            <div class="form-group">
-                <label>Login/email</label>
-                <input type="username" class="form-control" aria-describedby="emailHelp" name="login" value={{account.login}}>
-            </div>
-            <div class="form-group">
-                <label>Website</label>
-                <input type="website" class="form-control" name="website" value="{{account.website}}">
-            </div>
-            <input type="range" class="form-range" min="0" max="32" id="range" name="range" value={{account.range}}><br>
+            <h2><p class="text-center">Edit account</p></h2>
+            <input type="username" class="form-control" aria-describedby="emailHelp" name="login" value={{account.login}}>
+            <input type="website" class="form-control" name="website" value="{{account.website}}">
+            <input type="range" class="form-range" min="0" max="32" id="range" name="range" value={{account.range}}>
             <label>Length: <a id="length_pass">{{account.range}}</a></label>
-            <div class="form-group">
-                <label>Password</label>
-                <input class="form-control" name="password_noenc" id="password_noenc" maxlength="32" value={{account.password}}>
-            </div>
+            <input type="text" class="form-control" name="password_noenc" id="password_noenc" maxlength="32" value={{account.password}}>
             <div class="d-flex justify-content-between">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_save">Save changes</button>
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal_delete">Delete account</button>
+                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal_save">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal_delete">Delete account</button>
             </div>
-        </div>
-
         {% endif %}
 
         <div class="modal fade" id="modal_save" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -74,11 +36,11 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        Are you sure?
+                        Do you want to save your changes?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" name="submit" class="btn btn-primary">Save changes</button>
+                        <button type="submit" name="submit" class="btn btn-info">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -94,23 +56,32 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        Are you sure?
+                        Do you want to delete this account?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="delete" name="delete" class="btn btn-danger">Delete account</button>
+                        <button type="delete" name="delete" class="btn btn-info">Delete account</button>
                     </div>
                 </div>
             </div>
         </div>
 
     </form>
+</div>
 {% endblock %}
 
 {% block script %}
     var slider = document.getElementById("range");
+    var length_pass = document.getElementById('length_pass');
+    var min = slider.min;
+    var max = slider.max;
+    var value = slider.value;
+
+    slider.style.background = `linear-gradient(to right, #808e9b 0%, #808e9b ${(value-min)/(max-min)*100}%, #DEE2E6 ${(value-min)/(max-min)*100}%, #DEE2E6 100%)`
 
     slider.oninput = function() {
+        this.style.background = `linear-gradient(to right, #808e9b 0%, #808e9b ${(this.value-this.min)/(this.max-this.min)*100}%, #DEE2E6 ${(this.value-this.min)/(this.max-this.min)*100}%, #DEE2E6 100%)`
+
         $.ajax(
         {
             method: "POST",
@@ -128,28 +99,12 @@
          })
     };
 
-    function copy_username(){
-        let inputText = document.getElementById("login");
-        inputText.select();
-        document.execCommand("copy");
-        document.getElementById("copy_username_bt").innerHTML = "Copied";
-        document.getElementById("copy_username_bt").focus();
-    };
-
-    function copy_password(){
-        let inputText = document.getElementById("password");
-        inputText.select();
-        document.execCommand("copy");
-        document.getElementById("copy_password_bt").innerHTML = "Copied";
-        document.getElementById("copy_password_bt").focus();
-
-    };
-
     var password_change = document.getElementById("password_noenc");
 
     password_change.addEventListener('keyup', (e) => {
-        document.getElementById('range').value = password_change.value.length;
-        document.getElementById('length_pass').innerHTML = password_change.value.length;
+        slider.value = password_change.value.length;
+        length_pass.innerHTML = password_change.value.length;
+        slider.style.background = `linear-gradient(to right, #808e9b 0%, #808e9b ${(slider.value-slider.min)/(slider.max-slider.min)*100}%, #DEE2E6 ${(slider.value-slider.min)/(slider.max-slider.min)*100}%, #DEE2E6 100%)`
     });
 
 {% endblock %}

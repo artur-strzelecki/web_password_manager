@@ -2,96 +2,34 @@
 
 {% block title %} Sign up {% endblock %}
 {% block content %}
-    <div class="mx-auto" style="width: 700px;">
-        <h2><p class="text-center">Sign up</p></h2>
-        <form method="POST">
+    <div id="container">
+        <form id="form" method="POST">
             {% csrf_token %}
-            <div class="form-group">
-                <label>Username</label>
-                <input type="username" class="form-control" id="username" name="username" value={{username_after_error}}>
-                    <small id="check_username" class="form-text text-muted"></small>
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name="email" value="{{email_after_error}}">
-                    <small id="check_email" class="form-text text-muted"></small>
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" class="form-control" id="password1" name="password1">
-            </div>
-            <div class="form-group">
-                <label>Confirm Password</label>
-                <input type="password" class="form-control" id="password2" name="password2">
-                    <small id="check_password" class="form-text text-muted"></small>
-            </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <h2><p class="text-center">Sign up</p></h2>
+            {% if create_success is not None %}
+                <div id="div_alert" class="alert alert-info" role="alert">
+                    {% if create_success == 0 %}
+                        Incorrect values in form. Please try again.
+                    {% else %}
+                        Account successfully created. Please check your email and verify your account.
+                    {% endif %}
+                </div>
+            {% endif %}
+            <input type="username" class="form-control" id="username" placeholder="Username" name="username" value={{username_after_error}}>
+            <small id="check_username" class="form-text text-muted"></small>
+            <input type="email" class="form-control" id="email" placeholder="Email" aria-describedby="emailHelp" name="email" value="{{email_after_error}}">
+            <small id="check_email" class="form-text text-muted"></small>
+            <input type="password" class="form-control" placeholder="Password" id="password1" name="password1">
+            <input type="password" class="form-control" placeholder="Confirm Password" id="password2" name="password2">
+            <button type="submit" class="btn btn-lg btn-secondary btn-block">Register</button>
         </form>
     </div>
-
-    <button type="button" id="buttonmodalerror" class="invisible" data-toggle="modal" data-target="#errorModal">
-    </button>
-
-    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="errorModalLabel">Fail</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                Incorrect values in form. Please try again.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <button type="button" id="buttonmodalsuccess" class="invisible" data-toggle="modal" data-target="#successModal">
-    </button>
-
-    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="successModalLabel">Success!</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                Account successfully created. Please check your email and verify your account.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <a href="{% url 'login' %}"> <button type="button" class="btn btn-primary">Login</button></a>
-                </div>
-            </div>
-        </div>
-    </div>
-
 {% endblock %}
 
 {% block script %}
     var user = document.getElementById("username");
     var emai = document.getElementById("email");
-    var pass = document.getElementById("password2");
-    var ex_modal_err = {{exec_modal_error}};
-    var ex_modal_succe = {{exec_modal_success}};
 
-    if (ex_modal_err === 1)
-    {
-       document.getElementById("buttonmodalerror").click();
-    }
-
-    if (ex_modal_succe === 1)
-    {
-       document.getElementById("buttonmodalsuccess").click();
-    }
     user.oninput = function() {
         $.ajax(
         {
@@ -128,22 +66,4 @@
          })
     };
 
-    pass.oninput = function() {
-        $.ajax(
-        {
-            method: "POST",
-            url: "{% url 'check_register' %}",
-            data:
-            {
-                type: "3",
-                password1: document.getElementById("password1").value,
-                password2: this.value,
-                csrfmiddlewaretoken: "{{ csrf_token }}"
-            },
-            success: function(message)
-            {
-                document.getElementById("check_password").innerHTML = message
-            }
-         })
-    };
 {% endblock %}

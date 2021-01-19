@@ -1,0 +1,181 @@
+/* basic template */
+
+body {
+    background-color: #485460;
+    color: #00d8d6;
+    height: 100%;
+}
+
+.form-control:focus {
+        border-color: #ced6e0;
+        box-shadow: 0 0 0 0.2rem rgba(223, 228, 234, 0.25);
+}
+
+#nav {
+    background-color: #1e272e;
+}
+
+#div_nav {
+    color: #34e7e4;
+}
+
+/* slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 350px;
+  height: 5px;
+  padding: 0;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  background: #575fcf;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -webkit-border-radius: 5px;
+  height: 16px;
+  width: 16px;
+  border-radius: 5px;
+  background: #d2dae2;
+  border: 1px solid #c5c5c5;
+}
+
+/* main div in templates */
+#container {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    position: absolute;
+    height: 85%;
+    width: 100%;
+}
+
+#container_list {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 85%;
+    width: 100%;
+}
+
+#container_account {
+    width: 100%;
+    max-width: 350px;
+}
+
+/* profile template */
+#container_profile {
+    width: 100%;
+    max-width: 350px;
+}
+
+#container_profile a {
+    text-decoration: none;
+}
+
+#container_profile p {
+    margin-bottom: 5px;
+}
+
+/* from and input */
+#form {
+    width: 100%;
+    max-width: 350px;
+}
+
+#form_row {
+    width: 100%;
+    max-width: 500px;
+}
+
+input[type="username"] {
+    background-color: #d2dae2;
+    margin-bottom: 10px;
+}
+
+input[type="first_name"] {
+    background-color: #d2dae2;
+    margin-bottom: 10px;
+}
+
+input[type="last_name"] {
+    background-color: #d2dae2;
+    margin-bottom: 20px;
+}
+
+input[type="email"] {
+    background-color: #d2dae2;
+    margin-bottom: 10px;
+}
+
+input[type="website"] {
+    background-color: #d2dae2;
+    margin-bottom: 10px;
+}
+
+input[type="password"] {
+    background-color: #d2dae2;
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    background-color: #d2dae2;
+    margin-bottom: 20px;
+}
+
+/* div with forgot password and create account in login template */
+#login_a1, #login_a2 {
+    color: #00d8d6;
+}
+#password2 {
+    margin-top: -10px;
+}
+
+/* check in register tempalte */
+#check_username, #check_email {
+    color: #808e9b;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+/* list account templete */
+
+.link_list_acc {
+    color: #485460;
+    text-decoration: none;
+}
+
+#copy_login_list {
+    border-radius: 15px;
+    text-align: center;
+}
+
+#copy_pass_list {
+    border-radius: 15px;
+    text-align: center;
+}
+
+.col-6 a {
+    color: #485460;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.p-0 a {
+    color: #485460;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Modal */
+
+.modal-title, .modal-body {
+    color: #485460;
+}
+
+.modal-content {
+    background-color: #f1f2f6;
+}

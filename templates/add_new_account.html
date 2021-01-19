@@ -2,32 +2,31 @@
 
 {% block title %} Add account {% endblock %}
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        <div class="mx-auto" style="width: 700px;">
-            <h2><p class="text-center">Add account</p></h2>
-            <div class="form-group">
-                <label>Login/email</label>
-                <input type="username" class="form-control" aria-describedby="emailHelp" name="login">
-            </div>
-            <div class="form-group">
-                <label>Website</label>
-                <input type="website" class="form-control" name="website">
-            </div>
+    <div id="container">
+        <form id="form" method="post">
+            {% csrf_token %}
+            <h2><p class="text-center">New account</p></h2>
+            <input type="username" class="form-control" aria-describedby="emailHelp" name="login" placeholder="Login/email">
+            <input type="website" class="form-control" placeholder="Website" name="website">
             <input type="range" class="form-range" min="0" max="32" id="range" name="range"><br>
             <label>Length: <a id="length_pass"></a> </label>
-            <div class="form-group">
-                <label>Password</label>
-                <input class="form-control" name="password_noenc" id="password" maxlength="32">
-            </div>
-            <button type="submit" class="btn btn-primary">Add account</button>
-        </div>
-    </form>
+            <input type="text" class="form-control" name="password_noenc" id="password" placeholder="Password" maxlength="32">
+            <button type="submit" class="btn btn-lg btn-secondary btn-block">Add account</button>
+        </form>
+    </div>
 {% endblock %}
 {% block script %}
     var slider = document.getElementById('range');
+    var length_pass = document.getElementById('length_pass');
+    var min = slider.min;
+    var max = slider.max;
+    var value = slider.value;
+
+    slider.style.background = `linear-gradient(to right, #808e9b 0%, #808e9b ${(value-min)/(max-min)*100}%, #DEE2E6 ${(value-min)/(max-min)*100}%, #DEE2E6 100%)`
 
     slider.oninput = function() {
+        this.style.background = `linear-gradient(to right, #808e9b 0%, #808e9b ${(this.value-this.min)/(this.max-this.min)*100}%, #DEE2E6 ${(this.value-this.min)/(this.max-this.min)*100}%, #DEE2E6 100%)`
+
         $.ajax(
         {
             method: "POST",
@@ -48,8 +47,9 @@
     var password_change = document.getElementById("password");
 
     password_change.addEventListener('keyup', (e) => {
-        document.getElementById('range').value = password_change.value.length;
-        document.getElementById('length_pass').innerHTML = password_change.value.length;
+        slider.value = password_change.value.length;
+        length_pass.innerHTML = password_change.value.length;
+        slider.style.background = `linear-gradient(to right, #808e9b 0%, #808e9b ${(slider.value-slider.min)/(slider.max-slider.min)*100}%, #DEE2E6 ${(slider.value-slider.min)/(slider.max-slider.min)*100}%, #DEE2E6 100%)`
     });
 
 {% endblock %}
