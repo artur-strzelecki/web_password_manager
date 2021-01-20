@@ -14,7 +14,7 @@
 
             {% for acc in list_account %}
                 <div class="card text-dark bg-light mb-3">
-                        <div class="card-header" style="font-family: Georgia; font-size: 15px;">
+                        <div class="card-header" style="font-family: Arial; font-size: 16px;">
                             <div class="d-flex">
                                 <div class="mr-auto p-0" style="max-width: 250px;">
                                     {{acc.website}}
@@ -32,13 +32,43 @@
                         <div class="card-body">
                               <div class="row g-1">
                                 <div class="col-6">
-                                    <a onclick="">
-                                        <div id="copy_login_list" class="p-1 border bg-light">Copy login</div>
+                                    <a>
+                                        <div id="{{acc.id}}user" class="p-1 border bg-light" style="border-radius: 15px; text-align: center; font-size: 14px;"
+                                              onmousedown="copy_login_down({{acc.id}})"  onmouseup="copy_login_up({{acc.id}})">
+                                            <div id="{{acc.id}}icon_username">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                                                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                                </svg>
+                                            </div>
+                                            <div id="{{acc.id}}icon_username_copy" style="display: none">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">"
+                                                    <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                                </svg>
+                                            </div>
+                                            Copy login</div>
                                     </a>
                                 </div>
                                 <div class="col-6">
-                                  <a onclick="">
-                                    <div id="copy_pass_list" class="p-1 border bg-light">Copy password</div>
+                                  <a>
+                                    <div id="{{acc.id}}password" class="p-1 border bg-light" style="border-radius: 15px; text-align: center; font-size: 14px;"
+                                         onmousedown="copy_password_down({{acc.id}})"  onmouseup="copy_password_up({{acc.id}})">
+                                        <div id="{{acc.id}}icon_password">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                            </svg>
+                                        </div>
+                                        <div id="{{acc.id}}icon_password_copy" style="display: none">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">"
+                                                <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                            </svg>
+                                        </div>
+                                        Copy password</div>
                                   </a>
                                 </div>
                               </div>
@@ -47,6 +77,99 @@
             {% endfor %}
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    function copy_login_down(id_acc){
+        var icon_old_id = id_acc + 'icon_username';
+        var icon_old = document.getElementById(icon_old_id);
+        icon_old.style.display = "none";
+
+        var icon_new_id = id_acc + 'icon_username_copy';
+        var icon_new = document.getElementById(icon_new_id);
+        icon_new.style.display = "block";
+
+        var div_id = id_acc + 'user';
+        var div = document.getElementById(div_id);
+        div.style.color='#808e9b';
+        div.style.transform = 'translateY(1px)';
+
+        $.ajax(
+        {
+            method: "POST",
+            url: "{% url 'copy_info_acc' %}",
+            data:
+            {
+                id_acc: id_acc,
+                type_copy: 'login',
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: function(text)
+            {
+                    if (text !== ''){
+                        var copy_area = document.createElement('textarea');
+                        copy_area.innerHTML = text;
+                        document.body.appendChild(copy_area);
+                        copy_area.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(copy_area);
+                    }
+            }
+         })
+    };
+
+    function copy_login_up(id_acc){
+        id_acc = id_acc + 'user';
+        var div = document.getElementById(id_acc);
+        div.style.color='#808e9b';
+        div.style.transform = 'translateY(-1px)';
+    };
+
+
+    function copy_password_down(id_acc){
+        var icon_old_id = id_acc + 'icon_password';
+        var icon_old = document.getElementById(icon_old_id);
+        icon_old.style.display = "none";
+
+        var icon_new_id = id_acc + 'icon_password_copy';
+        var icon_new = document.getElementById(icon_new_id);
+        icon_new.style.display = "block";
+
+        var div_id = id_acc + 'password';
+        var div = document.getElementById(div_id);
+        div.style.color='#808e9b';
+        div.style.transform = 'translateY(1px)';
+
+        $.ajax(
+        {
+            method: "POST",
+            url: "{% url 'copy_info_acc' %}",
+            data:
+            {
+                id_acc: id_acc,
+                type_copy: 'password',
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: function(text)
+            {
+                    if (text !== ''){
+                        var copy_area = document.createElement('textarea');
+                        copy_area.innerHTML = text;
+                        document.body.appendChild(copy_area);
+                        copy_area.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(copy_area);
+                    }
+            }
+         })
+    };
+
+    function copy_password_up(id_acc){
+        div_id = id_acc + 'password';
+        var div = document.getElementById(div_id);
+        div.style.color='#808e9b';
+        div.style.transform = 'translateY(-1px)';
+    };
 {% endblock %}
 
 

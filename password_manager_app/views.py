@@ -242,3 +242,23 @@ def profile_user_view(request):
     else:
         return redirect('login')
 # end profile user
+
+
+# copy tempalte list account
+def copy_info_view(request):
+    if request.method == 'POST':
+        info = ''
+        id_acc = request.POST['id_acc']
+        type_copy = request.POST['type_copy']
+        account = Account.objects.filter(id=id_acc, user=request.user)
+
+        if type_copy == 'login':
+            info = account[0].login
+
+        if type_copy == 'password':
+            info = decrypt_password(request, account[0].password)
+
+        return HttpResponse(info)
+    else:
+        return HttpResponse('')
+

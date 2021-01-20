@@ -3,7 +3,7 @@ from django.urls import path
 from django.contrib.auth import views as av
 from password_manager_app.views import login_view, register_view, accounts_view, check_register_view, \
     logout_success_view, add_new_account_view, take_slide_range_view, edit_account_view, activate_view, \
-    profile_user_view
+    profile_user_view, copy_info_view
 from django.conf import settings
 
 urlpatterns = [
@@ -25,4 +25,5 @@ urlpatterns = [
     path('reset_password_complete/', av.PasswordResetCompleteView.as_view(template_name='forgot_password/reset_password_complete.html'), name='password_reset_complete'),
     path('profile/change_password', av.PasswordChangeView.as_view(template_name='change_password/change_password.html'), name='password_change'),
     path('profile/change_password_done', av.PasswordChangeDoneView.as_view(template_name='change_password/change_password_done.html'), name='password_change_done'),
+    path('copy_info_acc/', copy_info_view, name='copy_info_acc')
 ]

@@ -148,14 +148,10 @@ input[type="text"] {
     text-decoration: none;
 }
 
-#copy_login_list {
-    border-radius: 15px;
-    text-align: center;
-}
-
 #copy_pass_list {
     border-radius: 15px;
     text-align: center;
+    font-size: 14px;
 }
 
 .col-6 a {
@@ -169,6 +165,7 @@ input[type="text"] {
     text-decoration: none;
     cursor: pointer;
 }
+
 
 /* Modal */
 
