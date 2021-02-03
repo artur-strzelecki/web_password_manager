@@ -12,7 +12,7 @@
 
             <p class="font-weight-light" id="count">Accounts: {{count_acc}}</p>
 
-            {% for acc in list_account %}
+            {% for acc in page %}
                 <div class="card text-dark bg-light mb-3">
                         <div class="card-header" style="font-family: Arial; font-size: 16px;">
                             <div class="d-flex">
@@ -75,6 +75,42 @@
                         </div>
                 </div>
             {% endfor %}
+
+            <div class="text-center" style="font-size: 15px; margin-bottom: 30px;">
+                    {% if page.has_previous and page.number > 5 %}
+                        <a style="display: inline-block; padding: 3px 0; height: 30px;  width: 30px; background-color: #dcdde1; color: #222f3e; border-radius: 50%; text-decoration: none; cursor: pointer;" onmouseover="this.style.color='#f5f6fa'" onmouseout="this.style.color='#222f3e'" href="?page=1">
+                            1
+                        </a>
+                        <span style="margin-left: 3px; margin-right: 3px;">...</span>
+                    {% endif %}
+
+                    {% for num in page.paginator.page_range %}
+                        {% if page.number == num %}
+                        <a style="display: inline-block; padding: 3px 0; height: 30px;  width: 30px; background-color: #808e9b; color: #222f3e; border-radius: 50%; text-decoration: none; cursor: pointer;" onmouseover="this.style.color='#f5f6fa'" onmouseout="this.style.color='#222f3e'" href="?page={{num}}">
+                            {{num}}
+                        </a>
+                        {% elif num > page.number|add:'-4' and num < page.number|add:'4' %}
+                        <a style=" display: inline-block; padding: 3px 0; height: 30px;  width: 30px; background-color: #dcdde1; color: #222f3e; border-radius: 50%; text-decoration: none; cursor: pointer;" onmouseover="this.style.color='#f5f6fa'" onmouseout="this.style.color='#222f3e'" href="?page={{num}}">
+                            <span> {{num}} </span>
+                        </a>
+                         {% elif page.number|add:'5' > page.paginator.num_pages and num == page.paginator.num_pages %}
+                        <a style="display: inline-block; padding: 3px 0; height: 30px;  width: 30px; background-color: #dcdde1; color: #222f3e; border-radius: 50%; text-decoration: none; cursor: pointer;" onmouseover="this.style.color='#f5f6fa'" onmouseout="this.style.color='#222f3e'" href="?page={{num}}">
+                            {{num}}
+                        </a>
+                        {% elif page.number|add:'7' < page.paginator.num_pages and num == 1 %}
+                        <a style="display: inline-block; padding: 3px 0; height: 30px;  width: 30px; background-color: #dcdde1; color: #222f3e; border-radius: 50%; text-decoration: none; cursor: pointer;" onmouseover="this.style.color='#f5f6fa'" onmouseout="this.style.color='#222f3e'" href="?page={{num}}">
+                            {{num}}
+                        </a>
+                     {% endif %}
+                    {% endfor %}
+                    {% if page.has_next and page.number|add:'4' < page.paginator.num_pages  %}
+                        <span style="margin-left: 3px; margin-right: 3px;">...</span>
+                        <a style="display: inline-block; padding: 3px 0; height: 30px;  width: 30px; background-color: #dcdde1; color: #222f3e; border-radius: 50%; text-decoration: none; cursor: pointer;" onmouseover="this.style.color='#f5f6fa'" onmouseout="this.style.color='#222f3e'" href="?page={{page.paginator.num_pages}}">
+                            {{page.paginator.num_pages}}
+                        </a>
+                    {% endif %}
+
+            </div>
         </div>
     </div>
 {% endblock %}

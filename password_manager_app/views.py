@@ -14,6 +14,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from .tokens import activate_token
 from django.utils.encoding import force_bytes, force_text
+from django.core.paginator import Paginator
 
 
 # user login and registrtion and logout
@@ -78,7 +79,7 @@ def register_view(request):
 
                 link_to_email = 'http://' + get_current_site(request).domain + link
                 email = EmailMessage(
-                    'Activate your account',
+                    'Activate your account (password manager)',
                     'Hello ' + user.username + '!' + '\n' + 'Please click this link to activate your account ' +
                     link_to_email,
                     EMAIL_HOST_USER,
@@ -150,6 +151,11 @@ def take_slide_range_view(request):
 def accounts_view(request):
     if request.user.is_authenticated:
         list_acc = Account.objects.filter(user=request.user)
+
+        paginator = Paginator(list_acc, 7)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         if request.method == 'POST':
             search = request.POST.get('search')
             list_search = []
@@ -158,10 +164,14 @@ def accounts_view(request):
                     if search in acc.login or search in acc.website:
                         list_search.append(acc)
 
-                return render(request, 'list_accounts.html', {'list_account': list_search, 'search': search,
+                paginator = Paginator(list_search, 7)
+                page_number = request.GET.get('page')
+                page_obj = paginator.get_page(page_number)
+
+                return render(request, 'list_accounts.html', {'page': page_obj, 'search': search,
                                                               'count_acc': len(list_search)})
 
-        return render(request, 'list_accounts.html', {'list_account': list_acc, 'count_acc': len(list_acc)})
+        return render(request, 'list_accounts.html', {'page': page_obj, 'count_acc': len(list_acc)})
     else:
         return redirect('login')
 
