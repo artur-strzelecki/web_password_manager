@@ -15,6 +15,10 @@ from django.contrib.sites.shortcuts import get_current_site
 from .tokens import activate_token
 from django.utils.encoding import force_bytes, force_text
 from django.core.paginator import Paginator
+from .two_factor_auth import get_device_2f, veryf_user_2f, delete_device_2f, create_device_2f, verify_device_2f
+import qrcode
+from io import BytesIO
+import base64
 
 
 # user login and registrtion and logout
@@ -24,6 +28,29 @@ def login_view(request):
         if request.method == 'POST':
             user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
             if user is not None:
+                # two factor auth
+                try:
+                    token = request.POST['token']
+                except KeyError:
+                    token = ''
+
+                # uncover input token in template request.post[token] not exists
+                if get_device_2f(user) is not None and token == '':
+                    return render(request, 'login.html', {'message': message, 'username': request.POST['username'],
+                                                          'password': request.POST['password'], '2f': True})
+
+                # veryf token
+                if get_device_2f(user) is not None and token != '':
+                    if veryf_user_2f(user, token) is True:
+                        login(request, user)
+                        return redirect('accounts')
+                    else:  # to write token again
+                        message = 'Invalid token, please try again'
+                        return render(request, 'login.html', {'message': message, 'username': request.POST['username'],
+                                                              'password': request.POST['password'], '2f': True})
+
+                # end two factor auth
+
                 login(request, user)
                 return redirect('accounts')
             else:
@@ -41,7 +68,7 @@ def login_view(request):
                 else:
                     message = 'Incorrect password or username'
 
-        return render(request, 'login.html', {'message': message})
+        return render(request, 'login.html', {'message': message, '2f': False})
     else:
         return redirect('accounts')
 
@@ -150,7 +177,7 @@ def take_slide_range_view(request):
 # start account view
 def accounts_view(request):
     if request.user.is_authenticated:
-        list_acc = Account.objects.filter(user=request.user)
+        list_acc = Account.objects.filter(user=request.user).order_by('-id')
 
         paginator = Paginator(list_acc, 7)
         page_number = request.GET.get('page')
@@ -234,21 +261,33 @@ def activate_view(request, uidb64, token):
 # profile user
 def profile_user_view(request):
     if request.user.is_authenticated:
+        # check 2 fator auth
+
+        two_factor_auth = 'Off'
+        if get_device_2f(request.user) is not None:
+            two_factor_auth = 'On'
+
         if request.method == 'POST':
             change = 0
-            # change first name
-            if request.POST['first_name'] != '':
-                change = 1
-                request.user.first_name = request.POST['first_name']
-            # change last name
-            if request.POST['last_name'] != '':
-                change = 1
-                request.user.last_name = request.POST['last_name']
 
-            if change == 1:
-                request.user.save()
+            if request.POST.get('submit') is not None:
+                # change first name
+                if request.POST['first_name'] != '':
+                    change = 1
+                    request.user.first_name = request.POST['first_name']
+                # change last name
+                if request.POST['last_name'] != '':
+                    change = 1
+                    request.user.last_name = request.POST['last_name']
 
-        return render(request, 'profile.html')
+                if change == 1:
+                    request.user.save()
+
+            elif request.POST.get('delete') is not None:
+                delete_device_2f(request.user)
+                two_factor_auth = 'Off'
+
+        return render(request, 'profile.html', {'two_factor_auth': two_factor_auth})
     else:
         return redirect('login')
 # end profile user
@@ -271,4 +310,46 @@ def copy_info_view(request):
         return HttpResponse(info)
     else:
         return HttpResponse('')
+
+
+def configure_2f_view(request):
+    if request.user.is_authenticated:
+        message = ''
+        device_true_exists = get_device_2f(request.user, True)  # get only confirmed=True device
+        device_false_exists = get_device_2f(request.user, False)  # get only confirmed=False device
+        if device_true_exists is None:
+            # if false confimed device exists = user during configure
+            if device_false_exists is None:
+                device = create_device_2f(request.user)  # create confirmed=False device
+                device_url = device.config_url
+                if device_url is None:
+                    message = 'Something goes wrong, please try again later'
+            else:
+                device = device_false_exists
+                device_url = device.config_url
+                if device_url is None:
+                    message = 'Something goes wrong, please try again later'
+
+            # generate qr code
+            qr_code_obj = qrcode.make(device_url)
+            bytes_io = BytesIO()
+            qr_code_obj.save(bytes_io, format="PNG")
+            qr_code = base64.b64encode(bytes_io.getvalue()).decode("utf-8")
+
+            # submit token to confirm device
+            if request.method == 'POST':
+                veryf = verify_device_2f(request.user, request.POST.get('token'))
+                if veryf is True:
+                    message = 'Your two-factor authentication is active!'
+                    device_url = None
+                else:
+                    message = 'Token incorrect, please try again'
+        else:
+            message = 'Two-factor authentication already configured'
+            device_url = None
+            qr_code = None
+
+        return render(request, 'configure_2f.html', {'device_url': device_url, 'qr_code': qr_code, 'message': message})
+    else:
+        return redirect('login')
 

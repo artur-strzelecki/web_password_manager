@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %} Profile {% endblock %}
+{% block content %}
+<div id="container">
+    <div id="container_2f">
+        <h2><p class="text-center">Two-factor authentication</p></h2>
+        <p class="font-weight-light text-center">Scan code QR or write code manually</p>
+        {% if message != '' %}
+            <div id="div_alert" class="alert alert-info text-center" role="alert">
+                {{message}}
+            </div>
+        {% endif %}
+        {% if device_url is not None %}
+            <div class="text-center" style="width: 100%;" >
+                <img height="200" width="200" src="data:image/png;base64,{{ qr_code|safe }}"><br>
+                <span class="text-center" style="font-size: 13px;"> {{device_url}}</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-center">
+                <div style="width: 100%; max-width: 300px;">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input style="background-color: #d2dae2; margin-bottom: 20px;" type="token" class="form-control" name="token"maxlength="10" placeholder="Token">
+                        <button type="submit" name="submit" class="btn btn-lg btn-secondary btn-block">Save device</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

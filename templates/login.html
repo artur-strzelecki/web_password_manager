@@ -11,8 +11,11 @@
                     {{message}}
                 </div>
             {% endif %}
-            <input type="username" class="form-control" placeholder="Username" aria-describedby="emailHelp" name="username">
-            <input type="password" class="form-control" name="password" placeholder="Password">
+            <input type="username" class="form-control" value="{{username}}" placeholder="Username" aria-describedby="emailHelp" name="username">
+            <input type="password" class="form-control" value="{{password}}" name="password" placeholder="Password">
+            {%if 2f is True %}
+            <input style="background-color: #d2dae2; margin-top: -10px; margin-bottom: 20px;" type="token" class="form-control" name="token" placeholder="Token">
+            {% endif %}
             <button type="submit" class="btn btn-lg btn-secondary btn-block">Log in</button><br>
             <div class="d-flex">
                 <div class="mr-auto p-0"><p><a id="login_a1" href="{% url 'register' %}">Don't have account? </a> </p></div>

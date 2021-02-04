@@ -5,15 +5,52 @@
 <div id="container">
     <div id="container_profile">
         <form id="form" method="post">
+            {% csrf_token %}
             <h2><p class="text-center">Profile</p></h2>
             <p class="font-weight-light">Personal data:</p>
             <input type="first_name" class="form-control" name="first_name" maxlength="150" placeholder="First name" value={{request.user.first_name}}>
             <input type="last_name" class="form-control" name="last_name"maxlength="150" placeholder="Last name" value={{request.user.last_name}}>
-            <button type="submit" class="btn btn-lg btn-secondary btn-block">Save changes</button>
+            <button type="submit" name="submit" class="btn btn-lg btn-secondary btn-block">Save changes</button>
         </form><br>
         <hr>
         <p class="font-weight-light">Changes:</p>
         <a href="{% url 'password_change' %}"> <button type="button" class="btn btn-lg btn-secondary btn-block">Change password</button></a>
+        <br>
+        <p class="font-weight-light">Two-factor authentication: {{two_factor_auth}}</p>
+        <button data-toggle="modal" data-target="#modal_auth" type="button" class="btn btn-lg btn-secondary btn-block">Two-factor authentication</button>
     </div>
+
+    <div class="modal fade" id="modal_auth" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_saveLabel">Two-factor authentication</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% if two_factor_auth == "On" %}
+                        Do you want to delete two-factor authentication?
+                    {% else %}
+                        Do you want to configure two-factor authentication?
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    {% if two_factor_auth == "On" %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="delete" name="delete" class="btn btn-info">Delete</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'configure_two_factor' %}"> <button type="submit" name="submit" class="btn btn-info">Configure</button> </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 {% endblock %}
