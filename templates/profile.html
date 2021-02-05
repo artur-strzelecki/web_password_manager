@@ -17,7 +17,11 @@
         <a href="{% url 'password_change' %}"> <button type="button" class="btn btn-lg btn-secondary btn-block">Change password</button></a>
         <br>
         <p class="font-weight-light">Two-factor authentication: {{two_factor_auth}}</p>
-        <button data-toggle="modal" data-target="#modal_auth" type="button" class="btn btn-lg btn-secondary btn-block">Two-factor authentication</button>
+        {% if two_factor_auth == "Off" %}
+            <button data-toggle="modal" data-target="#modal_auth" type="button" class="btn btn-lg btn-secondary btn-block">Two-factor authentication</button>
+        {% else %}
+            <a href="{% url 'configure_two_factor' %}"><button data-toggle="modal" type="button" class="btn btn-lg btn-secondary btn-block">Two-factor authentication</button></a>
+        {% endif %}
     </div>
 
     <div class="modal fade" id="modal_auth" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -30,22 +34,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {% if two_factor_auth == "On" %}
-                        Do you want to delete two-factor authentication?
-                    {% else %}
-                        Do you want to configure two-factor authentication?
-                    {% endif %}
+                    Do you want to configure two-factor authentication?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    {% if two_factor_auth == "On" %}
-                        <form method="post">
-                            {% csrf_token %}
-                            <button type="delete" name="delete" class="btn btn-info">Delete</button>
-                        </form>
-                    {% else %}
-                        <a href="{% url 'configure_two_factor' %}"> <button type="submit" name="submit" class="btn btn-info">Configure</button> </a>
-                    {% endif %}
+                    <a href="{% url 'configure_two_factor' %}"> <button type="submit" name="submit" class="btn btn-info">Configure</button> </a>
                 </div>
             </div>
         </div>

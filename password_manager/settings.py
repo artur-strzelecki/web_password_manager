@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # custom app
     'password_manager_app',
     'django_otp',
     'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_static'
 ]
 
 MIDDLEWARE = [

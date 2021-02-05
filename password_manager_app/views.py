@@ -15,7 +15,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from .tokens import activate_token
 from django.utils.encoding import force_bytes, force_text
 from django.core.paginator import Paginator
-from .two_factor_auth import get_device_2f, veryf_user_2f, delete_device_2f, create_device_2f, verify_device_2f
+from .two_factor_auth import get_device_2f, veryf_user_2f, delete_device_2f, create_device_2f, verify_device_2f, \
+    veryf_user_emergency_f2, print_tokens_emergency_2f, create_tokens_emergency_2f
 import qrcode
 from io import BytesIO
 import base64
@@ -29,19 +30,22 @@ def login_view(request):
             user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
             if user is not None:
                 # two factor auth
-                try:
-                    token = request.POST['token']
-                except KeyError:
-                    token = ''
+                token = request.POST.get('token')
+                emergency_code = request.POST.get('emergency_code')
 
-                # uncover input token in template request.post[token] not exists
-                if get_device_2f(user) is not None and token == '':
+                # uncover input token in template
+                if get_device_2f(user) is not None and token is None:
                     return render(request, 'login.html', {'message': message, 'username': request.POST['username'],
                                                           'password': request.POST['password'], '2f': True})
 
                 # veryf token
-                if get_device_2f(user) is not None and token != '':
-                    if veryf_user_2f(user, token) is True:
+                if get_device_2f(user) is not None and token is not None:
+                    if emergency_code is None:
+                        veryf = veryf_user_2f(user, token)
+                    else:
+                        veryf = veryf_user_emergency_f2(user, token)
+
+                    if veryf is True:
                         login(request, user)
                         return redirect('accounts')
                     else:  # to write token again
@@ -283,10 +287,6 @@ def profile_user_view(request):
                 if change == 1:
                     request.user.save()
 
-            elif request.POST.get('delete') is not None:
-                delete_device_2f(request.user)
-                two_factor_auth = 'Off'
-
         return render(request, 'profile.html', {'two_factor_auth': two_factor_auth})
     else:
         return redirect('login')
@@ -315,6 +315,8 @@ def copy_info_view(request):
 def configure_2f_view(request):
     if request.user.is_authenticated:
         message = ''
+        emergency_codes = None
+        configure = 0
         device_true_exists = get_device_2f(request.user, True)  # get only confirmed=True device
         device_false_exists = get_device_2f(request.user, False)  # get only confirmed=False device
         if device_true_exists is None:
@@ -340,16 +342,37 @@ def configure_2f_view(request):
             if request.method == 'POST':
                 veryf = verify_device_2f(request.user, request.POST.get('token'))
                 if veryf is True:
-                    message = 'Your two-factor authentication is active!'
+                    message = 'Your two-factor authentication is active! This is your emergency codes. Keep it in save place!'
+                    emergency_codes_obj = print_tokens_emergency_2f(request.user)
+                    configure = 1
+                    emergency_codes = []
+                    for code in emergency_codes_obj:
+                        emergency_codes.append(code.token)
+
                     device_url = None
                 else:
                     message = 'Token incorrect, please try again'
         else:
+            if request.method == 'POST':
+                if request.POST.get('delete') is not None:
+                    delete_device_2f(request.user)
+                    return redirect('profile')
+
+                elif request.POST.get('create_emergency_codes') is not None:
+                    create_tokens_emergency_2f(request.user)
+
             message = 'Two-factor authentication already configured'
+            configure = 1
+            emergency_codes_obj = print_tokens_emergency_2f(request.user)
+            emergency_codes = []
+            for code in emergency_codes_obj:
+                emergency_codes.append(code.token)
+
             device_url = None
             qr_code = None
 
-        return render(request, 'configure_2f.html', {'device_url': device_url, 'qr_code': qr_code, 'message': message})
+        return render(request, 'configure_2f.html', {'device_url': device_url, 'qr_code': qr_code, 'message': message,
+                                                     'emergency_codes': emergency_codes, 'configure': configure})
     else:
         return redirect('login')
 

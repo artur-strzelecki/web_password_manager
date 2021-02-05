@@ -11,7 +11,7 @@
                 {{message}}
             </div>
         {% endif %}
-        {% if device_url is not None %}
+        {% if configure == 0 %}
             <div class="text-center" style="width: 100%;" >
                 <img height="200" width="200" src="data:image/png;base64,{{ qr_code|safe }}"><br>
                 <span class="text-center" style="font-size: 13px;"> {{device_url}}</span>
@@ -26,7 +26,46 @@
                     </form>
                 </div>
             </div>
+        {% elif configure == 1 %}
+            <div class="justify-content-center">
+                <p class="font-weight-light text-center">Your emergency codes:</p>
+                {% for code in emergency_codes %}
+                    <p class="text-center" style="font-size: 13px; color: white;"> {{code}}</p>
+                {% endfor %}
+            </div>
+            <div class="d-flex justify-content-center">
+                <div style="width: 100%; max-width: 300px;">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="create_emergency_codes" name="create_emergency_codes" class="btn btn-lg btn-secondary btn-block">Create new codes</button>
+                        <button data-toggle="modal" data-target="#delete" type="button" class="btn btn-lg btn-secondary btn-block">Delete</button>
+                    </form>
+                </div>
+            </div>
         {% endif %}
+    </div>
+</div>
+
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal_saveLabel">Two-factor authentication</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Do you want to delete two-factor authentication?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="delete" name="delete" class="btn btn-info">Delete</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

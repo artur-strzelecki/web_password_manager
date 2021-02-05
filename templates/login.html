@@ -14,7 +14,11 @@
             <input type="username" class="form-control" value="{{username}}" placeholder="Username" aria-describedby="emailHelp" name="username">
             <input type="password" class="form-control" value="{{password}}" name="password" placeholder="Password">
             {%if 2f is True %}
-            <input style="background-color: #d2dae2; margin-top: -10px; margin-bottom: 20px;" type="token" class="form-control" name="token" placeholder="Token">
+            <input style="background-color: #d2dae2; margin-top: -10px; margin-bottom: 10px;" type="token" class="form-control" name="token" placeholder="Token">
+            <div class="form-check" style="margin-bottom: 20px;">
+                <input type="checkbox" class="form-check-input" id="emergency_code" name="emergency_code">
+                <label class="form-check-label" for="emergency_code" name="emergent_code">Use emergency code</label>
+            </div>
             {% endif %}
             <button type="submit" class="btn btn-lg btn-secondary btn-block">Log in</button><br>
             <div class="d-flex">
