@@ -1,1 +1,1 @@
-web: gnuicorn password_manager.wsgi --log-file -
+web: gnuicorn password_manager.wsgi

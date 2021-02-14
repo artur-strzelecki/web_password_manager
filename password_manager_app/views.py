@@ -108,7 +108,7 @@ def register_view(request):
                 link = reverse('activate', kwargs={'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
                                                    'token': activate_token.make_token(user)})
 
-                link_to_email = 'http://' + get_current_site(request).domain + link
+                link_to_email = 'https://' + get_current_site(request).domain + link
                 email = EmailMessage(
                     'Activate your account (password manager)',
                     'Hello ' + user.username + '!' + '\n' + 'Please click this link to activate your account ' +
