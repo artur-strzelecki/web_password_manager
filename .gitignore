@@ -10,3 +10,4 @@ password_manager_app/migrations/
 /requirements-dev.txt
 /requirements.txt
 /runtime.txt
+/Procfile
