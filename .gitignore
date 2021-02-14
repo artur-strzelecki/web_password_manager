@@ -6,8 +6,3 @@ venv/
 password_manager/__pycache__/
 password_manager_app/__pycache__/
 password_manager_app/migrations/
-/Procfile.txt
-/requirements-dev.txt
-/requirements.txt
-/runtime.txt
-/Procfile
