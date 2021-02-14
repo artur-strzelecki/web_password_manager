@@ -6,3 +6,4 @@ venv/
 password_manager/__pycache__/
 password_manager_app/__pycache__/
 password_manager_app/migrations/
+staticfiles/

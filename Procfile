@@ -1,1 +1,3 @@
-web: gnuicorn password_manager.wsgi
+web: gunicorn password_manager.wsgi:application --log-file - --log-level debug
+python manage.py collectstatic --noinput
+manage.py migrate
