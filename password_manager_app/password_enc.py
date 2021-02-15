@@ -32,8 +32,9 @@ def decrypt_password(request, pass_enc):
     key = base64.urlsafe_b64encode(kdf.derive(str.encode(config('KEY2_PASS'))))
     f = Fernet(key)
 
-    typ = type(pass_enc)
-    if isinstance(pass_enc, str):
+    if isinstance(pass_enc, memoryview):
+        pass_bytes = bytes(pass_enc)
+    elif isinstance(pass_enc, str):
         pass_bytes = str.encode(pass_enc)
     else:
         pass_bytes = pass_enc
