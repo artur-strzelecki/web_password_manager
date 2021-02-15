@@ -10,8 +10,10 @@
                 <div id="div_alert" class="alert alert-info" role="alert">
                     {% if create_success == 0 %}
                         Incorrect values in form. Please try again.
-                    {% else %}
+                    {% elif create_success == 1 %}
                         Account successfully created. Please check your email and verify your account.
+                    {% else %}
+                        We cannot create an account. Please try again later.
                     {% endif %}
                 </div>
             {% endif %}

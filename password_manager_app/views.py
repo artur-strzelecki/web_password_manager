@@ -7,7 +7,7 @@ from .models import Account
 import string
 import random
 from .password_enc import encrypt_password, decrypt_password
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from password_manager.settings import EMAIL_HOST_USER
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -66,7 +66,7 @@ def login_view(request):
 
                 if user is not None:
                     if user.is_active is False:
-                        message = 'Please check your email and activate your account'
+                        message = 'Please check your email and activate your account.'
                     else:
                         message = 'Incorrect password or username'
                 else:
@@ -75,6 +75,32 @@ def login_view(request):
         return render(request, 'login.html', {'message': message, '2f': False})
     else:
         return redirect('accounts')
+
+
+def send_email_view(request):
+    send_success = None
+    if request.method == 'POST':
+        try:
+            user = User.objects.get(email=request.POST.get('email'))
+        except User.DoesNotExist:
+            user = None
+
+        if user is not None:
+            link = reverse('activate', kwargs={'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
+                                               'token': activate_token.make_token(user)})
+
+            link_to_email = 'https://' + get_current_site(request).domain + link
+
+            content_email = 'Hello!' + '\n' + 'Please click this link to activate your account ' + link_to_email
+
+            try:
+                send_mail('Activate your account (ManPassword)', content_email, EMAIL_HOST_USER, [user.email],
+                          fail_silently=False)
+                return redirect('send_email_done')
+            except:
+                send_success = 0
+
+    return render(request, 'send_email.html', {'send_success': send_success})
 
 
 def register_view(request):
@@ -99,7 +125,6 @@ def register_view(request):
 
         if save == 1:
             user = User.objects.create_user(username=username, email=email, password=password1)
-            create_success = 1
             # send email
             if user is not None:
                 user.is_active = False
@@ -109,14 +134,16 @@ def register_view(request):
                                                    'token': activate_token.make_token(user)})
 
                 link_to_email = 'https://' + get_current_site(request).domain + link
-                email = EmailMessage(
-                    'Activate your account (password manager)',
-                    'Hello ' + user.username + '!' + '\n' + 'Please click this link to activate your account ' +
-                    link_to_email,
-                    EMAIL_HOST_USER,
-                    [user.email]
-                )
-                email.send(fail_silently=False)
+
+                content_email = 'Hello!' + '\n' + 'Please click this link to activate your account ' + link_to_email
+
+                try:
+                    send_mail('Activate your account (ManPassword)', content_email, EMAIL_HOST_USER, [user.email],
+                              fail_silently=False)
+                    create_success = 1
+                except:
+                    create_success = 2
+                    user.delete()
         else:
             create_success = 0
 

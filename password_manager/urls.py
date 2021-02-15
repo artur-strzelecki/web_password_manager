@@ -3,8 +3,9 @@ from django.urls import path
 from django.contrib.auth import views as av
 from password_manager_app.views import login_view, register_view, accounts_view, check_register_view, \
     logout_success_view, add_new_account_view, take_slide_range_view, edit_account_view, activate_view, \
-    profile_user_view, copy_info_view, configure_2f_view
+    profile_user_view, copy_info_view, configure_2f_view, send_email_view
 from django.conf import settings
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
@@ -27,5 +28,7 @@ urlpatterns = [
     path('profile/change_password_done', av.PasswordChangeDoneView.as_view(template_name='change_password/change_password_done.html'), name='password_change_done'),
     path('copy_info_acc/', copy_info_view, name='copy_info_acc'),
     path('configure_two_factor/', configure_2f_view, name='configure_two_factor'),
+    path('send_email/', send_email_view, name='send_email'),
+    path('send_email_done/', TemplateView.as_view(template_name='send_email_done.html'), name='send_email_done')
 
 ]

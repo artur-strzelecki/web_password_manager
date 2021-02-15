@@ -8,7 +8,11 @@
             <h2><p class="text-center">Sign in</p></h2>
             {% if message != '' %}
                 <div id="div_alert" class="alert alert-info" role="alert">
-                    {{message}}
+                    {% if message == 'Please check your email and activate your account.' %}
+                        {{message}} <a style="color: #485460; text-decoration: underline;" href="{% url 'send_email' %}"> Resend the e-mail for activate the account </a>
+                    {% else %}
+                        {{message}}
+                    {% endif %}
                 </div>
             {% endif %}
             <input type="username" class="form-control" value="{{username}}" placeholder="Username" aria-describedby="emailHelp" name="username">
