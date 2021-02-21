@@ -14,4 +14,4 @@ You can find all packages in requirements-dev.txt
 * Passwords are encrypted with special key.
 * User can add, modify and delete their passwords.
 * User can configure two-factor authentication with app like a Google Authenticator.
-
+* User after register must verify an email address.
