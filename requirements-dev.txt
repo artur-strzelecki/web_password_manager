@@ -1,10 +1,10 @@
-asgiref==3.3.1
+asgiref==3.3.4
 cffi==1.14.5
 colorama==0.4.4
 cryptography==3.4.6
 dj-database-url==0.5.0
 dj-static==0.0.6
-Django==3.1.7
+Django==3.2
 django-otp==1.0.2
 Pillow==8.1.2
 pycparser==2.20

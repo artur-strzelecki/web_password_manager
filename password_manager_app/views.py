@@ -292,8 +292,11 @@ def activate_view(request, uidb64, token):
 # profile user
 def profile_user_view(request):
     if request.user.is_authenticated:
-        # check 2 fator auth
+        # check test account
+        if request.user.id == 7:
+            return redirect('accounts')
 
+        # check 2 fator auth
         two_factor_auth = 'Off'
         if get_device_2f(request.user) is not None:
             two_factor_auth = 'On'
@@ -341,6 +344,10 @@ def copy_info_view(request):
 
 def configure_2f_view(request):
     if request.user.is_authenticated:
+        # check test account
+        if request.user.id == 7:
+            return redirect('accounts')
+
         message = ''
         emergency_codes = None
         configure = 0
